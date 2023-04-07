@@ -30,7 +30,7 @@ canvas.height = 800;
 
 #### `fillRect()` 함수
 - `fillRect()` 함수는 함수 이름처럼 사각형을 채우는 함수이다.
-- `fillRect(x, y, 너비, 높이)`
+  - `fillRect(x, y, 너비, 높이)`
 
 ### 1.2 Paths
 #### fill / stroke
@@ -53,7 +53,7 @@ ctx.rect(150, 150, 100, 100);
 ctx.rect(250, 250, 100, 100);
 ctx.stroke()
 ```
-- 주의할 점은 fill() / stroke() 설정 이후에 오는 rect()는 다시 적용을 해주어야 한다는 점이다. 
+- 주의할 점은 `fill()` / `stroke()` 설정 이후에 오는 `rect()`는 다시 적용을 해주어야 한다는 점이다. 
 
 #### path
 - 다음의 경우에서 예상되는 값은 맨 마지막의 요소만 빨간색으로 `fill()`이 적용될 것을 예상할 수 있다.
@@ -84,6 +84,27 @@ ctx.fill();
 - `beginPath()` 함수를 이용하게되면, 이전의 그림들의 path와 다른 새로운 path 값을 생성해주게된다.
 - 이전 경로와는 완전 단절, 새로운 경로가 생성되는 것이다.
 
+### 1.3 moveTo and lineTo
+#### rect()
+- `rect()` 함수도 사실 shortcut function 이었다.
+- 그렇다면 `rect()`를 사용하지 않고 직접 작성하려면 어떻게 하면 될까?
+
+#### moveTo() / lineTo()
+- `moveTo()`는 시작 지점을 이동해주는 함수
+  - `moveTo(x, y)`
+  - 연필의 위치를 옮김
+- `lineTo()`는 선을 그리면서 이동해주는 함수
+  - `lineTo(x, y)`
+  - 연필로 그림을 그림
+- x, y 좌표가 50, 50 떨어진 지점에서 정사각형을 그리고 싶다면?
+```jsx
+  ctx.moveTo(50, 50);
+  ctx.lineTo(150, 50);
+  ctx.lineTo(150, 150);
+  ctx.lineTo(50, 150);
+  ctx.lineTo(50, 50)
+  ctx.stroke(); // 채우고 싶다면 fill()
+```
 
 ## reference
 [바닐라 JS로 그림 앱 만들기 2022](https://nomadcoders.co/javascript-for-beginners-2)
