@@ -137,9 +137,49 @@ ctx.fillRect(200, 200, 402, 2); // 천장
 ctx.moveTo(200, 200); // 지붕 그릴 위치로 이동
 ctx.lineTo(405, 100); // 왼쪽 지붕
 ctx.lineTo(602, 200); // 오른쪽 지붕
-ctx.stroke() // 선 채우기
+ctx.stroke(); // 선 채우기
 ```
 ![house](./image/house.PNG)
+
+### 1.5 Drawing Project Two
+- 이번엔 사람을 그려보자
+- 사람에게 가장 중요한 것은? 머리
+
+#### arc()
+- `arc()` 는 원을 그려주는 함수
+  - `arc(x, y, radius, startAngle, endAngle, counterclockwise?)`
+  - endAngle 의 값을 조절해주면 반원 등을 만들 수 있음
+    ```jsx
+    ctx.arc(250, 50, 50, 0, 2 * Math.PI); // 원
+    ctx.arc(250, 50, 50, 0, 1 * Math.PI); // 반원
+    ```
+  - angle 관련 자료
+    ![angle](./image/angle.PNG)
+
+#### cute man
+- cute man
+```jsx
+ctx.fillRect(210 - 40, 200 - 40, 15, 100); // 왼팔
+ctx.fillRect(195 - 40, 300 - 40, 30, 10); // 왼손
+ctx.fillRect(350 - 40, 200 - 40, 15, 100); // 오른팔
+ctx.fillRect(350 - 40, 300 - 40, 30, 10); // 오른손
+ctx.fillRect(260 - 40, 200 - 40, 60, 200); // 몸통
+
+ctx.arc(250, 100, 50, 0, 2 * Math.PI); // 머리
+ctx.fill();
+
+ctx.beginPath(); // 새로운 path
+ctx.fillStyle = "#fff";
+ctx.arc(260 + 10, 80, 8, 0, 2 * Math.PI); // 눈
+ctx.arc(220 + 10, 80, 8, 0, 2 * Math.PI); // 눈
+ctx.fill();
+
+ctx.beginPath(); // 새로운 path
+ctx.arc(250, 110, 20, 0, 1 * Math.PI); // 귀여운 입
+ctx.fill();
+```
+![man](./image/man.PNG)
+
 
 ## reference
 [바닐라 JS로 그림 앱 만들기 2022](https://nomadcoders.co/javascript-for-beginners-2)
