@@ -2,22 +2,25 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 800;
+ctx.lineWidth = 2;
 
-ctx.fillRect(210 - 40, 200 - 40, 15, 100); // 왼팔
-ctx.fillRect(195 - 40, 300 - 40, 30, 10); // 왼손
-ctx.fillRect(350 - 40, 200 - 40, 15, 100); // 오른팔
-ctx.fillRect(350 - 40, 300 - 40, 30, 10); // 오른손
-ctx.fillRect(260 - 40, 200 - 40, 60, 200); // 몸통
+const colors = [
+  "#ff3838",
+  "#ffb8b8",
+  "#c56cf0",
+  "#ff9f1a",
+  "#fff200",
+  "#32ff7e",
+  "#7efff5",
+]  ;
 
-ctx.arc(250, 100, 50, 0, 2 * Math.PI); // 머리
-ctx.fill();
+function onClick(event){
+  ctx.beginPath(); // 새 선을 그릴 때 마다 새로운 컬러를 주기 위해서 새로운 path 생성
+  ctx.moveTo(0, 0); // 최상단 맨 왼쪽
+  const color = colors[Math.floor(Math.random() * colors.length)]; // color 배열에서 랜덤 컬러 값 가져오기
+  ctx.strokeStyle = color; // 해당 배열에서 가져온 값 적용
+  ctx.lineTo(event.offsetX, event.offsetY); // 해당 클릭 지점의 x, y 좌표
+  ctx.stroke(); // 선 그려주기
+}
 
-ctx.beginPath(); // 새로운 path
-ctx.fillStyle = "#fff";
-ctx.arc(260 + 10, 80, 8, 0, 2 * Math.PI); // 눈
-ctx.arc(220 + 10, 80, 8, 0, 2 * Math.PI); // 눈
-ctx.fill();
-
-ctx.beginPath(); // 새로운 path
-ctx.arc(250, 110, 20, 0, 1 * Math.PI); // 귀여운 입
-ctx.fill();
+canvas.addEventListener("mousemove", onClick);

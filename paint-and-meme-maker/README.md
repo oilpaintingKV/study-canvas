@@ -180,6 +180,43 @@ ctx.fill();
 ```
 ![man](./image/man.PNG)
 
+### 2.0 Painting Lines
+- 그림판 프로토타입을 제작해보자
+- 일단 1차적 목표는 클릭하면 선을 그릴 수 있게 만들어 보는 것!
+
+#### addEventListener("click")
+- 클릭시 이벤트를 만들어주기 위해서 `addEventListener("click", function)` 을 사용하여 클릭이벤트를 생성해준다.
+
+#### addEventListener("mousemove")
+- 클릭 말고 마우스에 따라서 그려지기 위해서는 `addEventListener("mousemove", function)` 을 사용해주면 된다.
+
+#### 기본 결과물
+- 좌표값(0, 0) 에서 각각 다른 색의 선이 마우스오버에 따라 그려지는 그림판
+```jsx
+ctx.lineWidth = 2;
+
+const colors = [
+  "#ff3838",
+  "#ffb8b8",
+  "#c56cf0",
+  "#ff9f1a",
+  "#fff200",
+  "#32ff7e",
+  "#7efff5",
+]  ;
+
+function onClick(event){
+  ctx.beginPath(); // 새 선을 그릴 때 마다 새로운 컬러를 주기 위해서 새로운 path 생성
+  ctx.moveTo(0, 0); // 최상단 맨 왼쪽
+  const color = colors[Math.floor(Math.random() * colors.length)]; // color 배열에서 랜덤 컬러 값 가져오기
+  ctx.strokeStyle = color; // 해당 배열에서 가져온 값 적용
+  ctx.lineTo(event.offsetX, event.offsetY); // 해당 클릭 지점의 x, y 좌표
+  ctx.stroke(); // 선 그려주기
+}
+
+canvas.addEventListener("mousemove", onClick);
+```
+![line](./image/line.PNG)
 
 ## reference
 [바닐라 JS로 그림 앱 만들기 2022](https://nomadcoders.co/javascript-for-beginners-2)
