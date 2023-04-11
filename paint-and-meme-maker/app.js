@@ -3,24 +3,24 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 800;
 ctx.lineWidth = 2;
+let isPainting = false;
 
-const colors = [
-  "#ff3838",
-  "#ffb8b8",
-  "#c56cf0",
-  "#ff9f1a",
-  "#fff200",
-  "#32ff7e",
-  "#7efff5",
-]  ;
-
-function onClick(event){
-  ctx.beginPath(); // 새 선을 그릴 때 마다 새로운 컬러를 주기 위해서 새로운 path 생성
-  ctx.moveTo(0, 0); // 최상단 맨 왼쪽
-  const color = colors[Math.floor(Math.random() * colors.length)]; // color 배열에서 랜덤 컬러 값 가져오기
-  ctx.strokeStyle = color; // 해당 배열에서 가져온 값 적용
-  ctx.lineTo(event.offsetX, event.offsetY); // 해당 클릭 지점의 x, y 좌표
-  ctx.stroke(); // 선 그려주기
+function onMove(event) {
+  if(isPainting){ // 만약 그림을 그리기 시작(mousedown) 했다면?
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    return;
+  }
+  ctx.moveTo(event.offsetX, event.offsetY); // 유저 마우스가 캔버스 내에 있는 위치로 움직이기
+}
+function startPainting(){ // 마우스를 누를 때 함수
+  isPainting = true;
+}
+function cancelPainting(){ // 마우스를 뗄 때 함수
+  isPainting = false;
 }
 
-canvas.addEventListener("mousemove", onClick);
+canvas.addEventListener("mousemove", onMove);
+canvas.addEventListener("mousedown", startPainting); // 마우스를 누르고 있는 상태
+canvas.addEventListener("mouseup", cancelPainting); // 마우스를 뗀 상태
+canvas.addEventListener("mouseleave", cancelPainting); // canvas 바깥으로 마우스가 나갔을 때, cancelPainting() 호출

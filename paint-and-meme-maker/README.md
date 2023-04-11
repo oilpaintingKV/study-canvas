@@ -203,7 +203,7 @@ const colors = [
   "#fff200",
   "#32ff7e",
   "#7efff5",
-]  ;
+];
 
 function onClick(event){
   ctx.beginPath(); // 새 선을 그릴 때 마다 새로운 컬러를 주기 위해서 새로운 path 생성
@@ -217,6 +217,85 @@ function onClick(event){
 canvas.addEventListener("mousemove", onClick);
 ```
 ![line](./image/line.PNG)
+
+### 2.1 Mouse Painting
+- 마우스가 눌려있는 채로 움직일 때부터 손가락을 뗄 때까지(드래그 한 영역) 그리는 그림판
+- 작동
+  - 유저가 canvas 위에서 마우스를 움직일 때 마다 `moveTo()`(이동만 시켜주는 함수) 호출 (유저가 클릭하고 움직일 때, 연필로 그림을 그려야 함)
+
+#### addEventListener("mousedown")
+- 마우스를 누르고 있는 상태의 이벤트
+
+#### addEventListener("mouseup")
+- 마우스를 뗀 상태의 이벤트
+
+#### 1차 완성작
+```jsx
+let isPainting = false;
+
+function onMove(event) {
+  if(isPainting){ // 만약 그림을 그리기 시작(mousedown) 했다면?
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    return;
+  }
+  ctx.moveTo(event.offsetX, event.offsetY); // 유저 마우스가 캔버스 내에 있는 위치로 움직이기
+}
+function onMouseDown(){ // 마우스를 누를 때 함수
+  isPainting = true;
+}
+function onMouseUp(){ // 마우스를 뗄 때 함수
+  isPainting = false;
+}
+
+canvas.addEventListener("mousemove", onMove);
+canvas.addEventListener("mousedown", onMouseDown); // 마우스를 누르고 있는 상태
+canvas.addEventListener("mouseup", onMouseUp); // 마우스를 뗀 상태
+```
+- 한가지 버그가 존재함. canvas 바깥으로 나갈 때까지 마우스를 누르고 있게 되면, 다시 canvas 내부로 돌아왔을 때 계속 그려짐
+- 이유는 다음과 같다.
+  - mousedown 상태로 canvas 바깥으로 나갔기 때문에 mouseup 이 적용이 안됨
+  - 자연스럽게 `onMouseUp()` 이 실행되지 않았고, isPainting도 true 상태로 머물러 있음
+
+#### fix bug
+- 첫번째 방법
+  - `addEventListener("mouseleave", onMouseUp)`
+  - 다음의 방식을 추가해주면 canvas 바깥으로 빠져 나왔을 때 `onMouseUp()`을 호출하여 `isPainting = false`를 만들어 주어 버그를 해결해 줄 수 있다.
+- 두번째 방법
+  - `canvas.addEventListener("mouseup", onMouseUp)`을
+  - `document.addEventListener("mouseup", onMouseUp)`로 수정해준다.
+  - 다음의 방식을 사용하게 되면, canvas에서 한정된 것이 아니라 문서 어디에서든지 마우스에서 손을 떼면 `isPainting = false` 가 된다.
+- 본 강의에선 **첫번째 방법**을 선택하였다.
+- 버그 픽스 후 최종 결과물
+```jsx
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = 800;
+canvas.height = 800;
+ctx.lineWidth = 2;
+let isPainting = false;
+
+function onMove(event) {
+  if(isPainting){ // 만약 그림을 그리기 시작(mousedown) 했다면?
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    return;
+  }
+  ctx.moveTo(event.offsetX, event.offsetY); // 유저 마우스가 캔버스 내에 있는 위치로 움직이기
+}
+function startPainting(){ // 마우스를 누를 때 함수
+  isPainting = true;
+}
+function cancelPainting(){ // 마우스를 뗄 때 함수
+  isPainting = false;
+}
+
+canvas.addEventListener("mousemove", onMove);
+canvas.addEventListener("mousedown", startPainting); // 마우스를 누르고 있는 상태
+canvas.addEventListener("mouseup", cancelPainting); // 마우스를 뗀 상태
+canvas.addEventListener("mouseleave", cancelPainting); // canvas 바깥으로 마우스가 나갔을 때, cancelPainting() 호출
+```
+![draw](./image/draw.gif)
 
 ## reference
 [바닐라 JS로 그림 앱 만들기 2022](https://nomadcoders.co/javascript-for-beginners-2)
