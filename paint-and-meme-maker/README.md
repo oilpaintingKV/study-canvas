@@ -297,5 +297,48 @@ canvas.addEventListener("mouseleave", cancelPainting); // canvas 바깥으로 �
 ```
 ![draw](./image/draw.gif)
 
+### 2.2 Line Width
+- 그림판 선의 굵기를 수정해보자
+#### input
+- 선 굵기를 조절하기 위한 input 생성
+```html
+<input id="line-width" type="range" min="1" max="20" value="5" step="0.1">
+```
+  - `type="range"` 범위 input
+  - `min="1"` 최소 1
+  - `max="20"` 최대 20
+  - `value="5"` 처음 설정 값
+  - `step="0.1"` 한번에 이동하는 값
+
+#### 선 굵기 조절하기
+```jsx
+const lineWidth = document.getElementById("line-width"); // input range
+ctx.lineWidth = lineWidth.value; // input range의 value
+
+function onLineWidthChange(event){ // input의 range가 변경되면 실행되는 함수
+  ctx.lineWidth = event.target.value; // linewidth 를 input range에서 변경된 값으로 넣어주자
+}
+
+lineWidth.addEventListener("change", onLineWidthChange); // input range가 변경되었을 때
+```
+- 먼저 `document.getElementById()`를 이용하여 input range를 받아온다.
+- `ctx.lineWidth` 에 input range의 value를 할당해준다.
+- input range가 변경되었을 때, 이벤트리스너로 변경 값을 감지, 감지가 변경되면 실행될 `onLineWidthCange(event)` 함수를 생성해주어, lineWidth의 값을 input range에서 변경된 값으로 다시 넣어준다.
+
+#### beginpath()
+- 상단의 선 굵기 조절하기만 추가하게되면, 선 굵기를 조절할 때마다 이전에 그렸던 선들도 같이 굵기가 조절된다.
+- 이를 위해 만들어 두었던 `onMove()` 함수에 다음과 같이 `ctx.beginpath()`를 추가해주면 매번 다시 그릴때마다 새로운 path가 생성된다.
+```jsx
+function onMove(event) {
+  if(isPainting){ // 만약 그림을 그리기 시작(mousedown) 했다면?
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    return;
+  }
+  ctx.beginPath(); // 한번 그리기가 끝나면 새로운 path
+  ctx.moveTo(event.offsetX, event.offsetY); // 유저 마우스가 캔버스 내에 있는 위치로 움직이기
+}
+```
+
 ## reference
 [바닐라 JS로 그림 앱 만들기 2022](https://nomadcoders.co/javascript-for-beginners-2)
